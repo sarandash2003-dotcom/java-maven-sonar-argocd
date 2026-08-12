@@ -23,7 +23,7 @@ pipeline {
     steps {
         withSonarQubeEnv('sonarqube') {
             sh '''
-                cd spring-boot-app
+                cd java-maven-sonar-argocd/spring-boot-app
                 mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar \
                   -Dsonar.projectKey=my-ec2-project \
                   -Dsonar.projectName="Spring Boot App" \
