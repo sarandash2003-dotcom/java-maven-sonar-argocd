@@ -19,16 +19,19 @@ pipeline {
         sh 'cd java-maven-sonar-argocd/spring-boot-app && mvn clean package'
       }
     }
-    stage('SonarQube Analysis') {
-      steps {
-        script {
-            def scannerHome = tool 'SonarScanner'
-            withSonarQubeEnv('sonarqube') {
-                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-ec2-project -Dsonar.sources=src/"
-            }
+   stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh '''
+                cd spring-boot-app
+                mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar \
+                  -Dsonar.projectKey=my-ec2-project \
+                  -Dsonar.projectName="Spring Boot App" \
+                  -Dsonar.host.url=$SONAR_HOST_URL
+            '''
         }
-      }
     }
+}
 
     stage('Build and Push Docker Image') {
       environment {
