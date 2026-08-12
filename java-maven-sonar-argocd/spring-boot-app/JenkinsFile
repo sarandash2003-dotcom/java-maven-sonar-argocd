@@ -51,31 +51,41 @@ pipeline {
     }
 }
     stage('Update Deployment File') {
-        environment {
-            GIT_REPO_NAME = "java-maven-sonar-argocd"
-            GIT_USER_NAME = "sarandash2003-dotcom"
+            environment {
+                GIT_REPO_NAME = "java-maven-sonar-argocd"
+                GIT_USER_NAME = "Zree77"
+            }
+
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github',
+                        usernameVariable: 'GITHUB_USERNAME',
+                        passwordVariable: 'GITHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        rm -rf gitops-repo
+
+                        git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git gitops-repo
+
+                        cd gitops-repo
+
+                        git config user.email "sarandash2003@gmail.com"
+                        git config user.name "${GIT_USER_NAME}"
+
+                        sed -i "s|image: .*|dassaran504/spring-boot-app:${BUILD_NUMBER}|g" spring-boot-app-manifests/deployment.yml
+
+                        git add spring-boot-app-manifests/deployment.yml
+
+                        git commit \
+                            -m "Update Spring Boot image tag to ${BUILD_NUMBER} [skip ci]" \
+                            || echo "No changes to commit"
+
+                        git push origin HEAD:main
+                    '''
+                }
+            }
         }
-      steps {
-    withCredentials([
-        usernamePassword(
-            credentialsId: 'github',
-            usernameVariable: 'GITHUB_USERNAME',
-            passwordVariable: 'GITHUB_TOKEN'
-        )
-    ]) {
-        sh '''
-            git config user.email "sarandash2003@gmail.com"
-            git config user.name "${GIT_USER_NAME}"
-
-            sed -i "s|image: .*|image: sarandash2003-dotcom/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd/spring-boot-app-manifests/deployment.yml
-
-            java-maven-sonar-argocd/spring-boot-app-manifests/deployment.yml
-            git commit -m "Update static site image tag to ${BUILD_NUMBER} [skip ci]" || echo "No changes to commit"
-
-            git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-        '''
     }
-}
-    }
-  }
 }
