@@ -15,7 +15,7 @@ spec:
         app: spring-boot-app
     spec:
       containers:
-      - name: spring-boot-app
-        dassaran504/java-maven-sonar-argocd/spring-boot-app:18
-        ports:
-        - containerPort: 8080
+         - name: spring-boot-app
+           image: dassaran504/java-maven-sonar-argocd/spring-boot-app:18
+           ports:
+              - containerPort: 8080
