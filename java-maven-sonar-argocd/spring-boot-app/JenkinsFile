@@ -53,7 +53,7 @@ pipeline {
     stage('Update Deployment File') {
             environment {
                 GIT_REPO_NAME = "java-maven-sonar-argocd"
-                GIT_USER_NAME = "Zree77"
+                GIT_USER_NAME = "sarandash2003-dotcom"
             }
 
             steps {
