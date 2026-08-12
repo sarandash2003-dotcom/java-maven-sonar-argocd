@@ -74,9 +74,9 @@ pipeline {
                         git config user.email "sarandash2003@gmail.com"
                         git config user.name "${GIT_USER_NAME}"
 
-                        sed -i "s|image: .*|dassaran504/java-maven-sonar-argocd/spring-boot-app:${BUILD_NUMBER}|g" spring-boot-app-manifests/deployment.yml
+                        sed -i "s|image: .*|dassaran504/java-maven-sonar-argocd/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd/spring-boot-app-manifests/deployment.yml
 
-                        git add spring-boot-app-manifests/deployment.yml
+                        git add java-maven-sonar-argocd/spring-boot-app-manifests/deployment.yml
 
                         git commit \
                             -m "Update Spring Boot image tag to ${BUILD_NUMBER} [skip ci]" \
